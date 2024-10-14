@@ -38,7 +38,7 @@ def init_db():
         GeneralSettings.create(key='Launch duration', value='40')
         GeneralSettings.create(key='Launch min time', value='12:30')
         GeneralSettings.create(key='Time unit', value='15')
-        GeneralSettings.create(key='Inter-session break', value='10')
+        GeneralSettings.create(key='Inter-session break', value='0')
     db.close()
 
 

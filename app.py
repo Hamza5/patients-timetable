@@ -32,17 +32,6 @@ def index():
         try:
             visits = get_patient_visits(file.stream)
             if visits:
-                visits.extend([
-                    PatientVisit(lastname='Ho', firstname='Bao', dob='01/02/1920', age=None, procedure='Colonoscopy'),
-                    PatientVisit(lastname='Doe', firstname='Jane', dob='02/05/1992', age=None, procedure='Gastroscopy'),
-                    PatientVisit(lastname='Bio', firstname='Bla', dob='29/03/2005', age=None, procedure='Gastroscopy + Colonoscopy'),
-                    PatientVisit(lastname='Lilo', firstname='Bolta', dob='22/03/2010', age=None, procedure='Colonoscopy'),
-                    PatientVisit(lastname='Bah', firstname='Baaa', dob='03/11/2007', age=None, procedure='Gastroscopy + Colonoscopy'),
-                    PatientVisit(lastname='Birda', firstname='Bora', dob='15/12/1998', age=None, procedure='Colonoscopy'),
-                    PatientVisit(lastname='Heho', firstname='Baobao', dob='28/09/1984', age=None, procedure='Colonoscopy'),
-                    PatientVisit(lastname='Zog', firstname='Zag', dob='16/04/1987', age=None, procedure='Gastroscopy'),
-                    PatientVisit(lastname='Mao', firstname='Hoja', dob='30/08/2012', age=None, procedure='Gastroscopy + Colonoscopy'),
-                ])
                 table = generate_timetable(visits)
             else:
                 flash('The uploaded file does not contain data in the correct format', 'danger')
