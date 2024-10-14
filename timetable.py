@@ -44,6 +44,8 @@ def get_patient_visits(pdf_file):
         patient_visits = []
         for page in pdf.pages:
             table = page.extract_table()
+            if not table:
+                continue
             for row in table:
                 procedure = (row[3] or '\n').splitlines()[0]
                 re_result = PATIENT_INFO_RE.match(row[1] or '')

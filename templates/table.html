@@ -1,0 +1,24 @@
+<div class="table-responsive">
+    <table class="table table-vcenter">
+        <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Age</th>
+            <th>Procedure</th>
+            <th>Start time</th>
+            <th>End time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in table %}
+            <tr>
+                <td>{{ entry.lastname }}, {{ entry.firstname }}</td>
+                <td>{{ entry.age }} yrs</td>
+                <td>{{ entry.procedure }}</td>
+                <td>{{ entry.start_time }}</td>
+                <td>{{ entry.end_time }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
