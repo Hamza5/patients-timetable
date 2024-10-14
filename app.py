@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, flash
 from pdfminer.pdfparser import PDFSyntaxError
 
 from database import db
-from timetable import get_patient_visits, generate_timetable, PatientVisit
+from timetable import get_patient_visits, generate_timetable
 
 app = Flask(__name__)
 app.secret_key = str(uuid4())
