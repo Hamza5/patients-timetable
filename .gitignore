@@ -1,6 +1,5 @@
 .*
 *.iml
 *.pdf
-*.sqlite3
 !.gitignore
 !.dockerignore
