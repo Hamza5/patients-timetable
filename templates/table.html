@@ -16,11 +16,11 @@
             {% if entry.procedure.startswith('Launch') %}
             	<td colspan="6" class="text-center table-secondary">{{ entry.procedure }}</td>
             {% else %}
-                <td><b>{{ entry.lastname }}, {{ entry.firstname }}</b></td>
-                <td><span class="badge bg-{{ 'purple' if entry.sex == 'F' else 'azure' }}-lt">{{ entry.sex }}</span></td>
+                <td>{{ entry.lastname }}, {{ entry.firstname }}</td>
+                <td>{{ entry.sex }}</td>
                 <td>{{ entry.age }} yrs</td>
-                <td><span class="badge {{ entry.procedure|procedure_badge_color }}">{{ entry.procedure }}</span></td>
-                <td>{{ entry.start_time }}</td>
+                <td>{{ entry.procedure }}</td>
+                <td class="text-red fw-bold">{{ entry.start_time }}</td>
                 <td>{{ entry.end_time }}</td>
             {% endif %}
             </tr>
