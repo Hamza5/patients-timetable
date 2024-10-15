@@ -1,3 +1,4 @@
+from collections import defaultdict
 from uuid import uuid4
 from flask import Flask, request, render_template, flash
 from pdfminer.pdfparser import PDFSyntaxError
@@ -7,6 +8,20 @@ from timetable import get_patient_visits, generate_timetable
 
 app = Flask(__name__)
 app.secret_key = str(uuid4())
+
+
+@app.template_filter('procedure_badge_color')
+def procedure_badge_color(procedure):
+    mapping = defaultdict(lambda: 'bg-orange-lt')
+    mapping.update({
+        'Gastroscopy': 'bg-blue-lt',
+        'Colonoscopy': 'bg-green-lt',
+        'Gastroscopy + Colonoscopy': 'bg-cyan-lt'
+    })
+    return mapping[procedure]
+
+
+app.jinja_env.filters['procedure_badge_color'] = procedure_badge_color
 
 
 @app.before_request

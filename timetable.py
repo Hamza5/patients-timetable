@@ -5,23 +5,26 @@ from datetime import datetime, timedelta, date
 from database import ProcedureSettings, GeneralSettings
 
 PATIENT_INFO_RE = re.compile(
-    r'(?P<lastname>.+?),\s*(?P<firstname>.+?).*?\nDOB:\s*(?P<dob>\d{2}/\d{2}/\d{4})\s*\((?P<age>\d+)', re.MULTILINE
+    r'(?P<lastname>.+?),\s*(?P<firstname>.+?)\s+M\w+\s+\((?P<sex>\w)\)\nDOB:\s*(?P<dob>\d+/\d+/\d+)\s*\((?P<age>\d+)', re.MULTILINE
 )
 
 
 def normalize_procedure(procedure):
+    procedure = procedure.strip().title()
     if 'Gastroscopy' in procedure and 'Colonoscopy' in procedure:
         return 'Gastroscopy + Colonoscopy'
     elif procedure.startswith('Gastroscopy'):
         return 'Gastroscopy'
     elif procedure.startswith('Colonoscopy'):
         return 'Colonoscopy'
+    return procedure
 
 
 @dataclass
 class PatientVisit:
     lastname: str
     firstname: str
+    sex: str
     dob: str
     age: int | None
     procedure: str
@@ -53,6 +56,7 @@ def get_patient_visits(pdf_file):
                     patient_visits.append(PatientVisit(
                         lastname=re_result.group('lastname'),
                         firstname=re_result.group('firstname'),
+                        sex=re_result.group('sex'),
                         dob=re_result.group('dob'),
                         age=int(re_result.group('age')) if re_result.group('age').isnumeric() else None,
                         procedure=normalize_procedure(procedure),
@@ -84,16 +88,19 @@ def generate_timetable(patients_visits: list[PatientVisit]):
     intersession_break = timedelta(minutes=int(GeneralSettings.get(GeneralSettings.key == 'Inter-session break').value))
     timetable = []
     for visit in patients_visits:
-        rule = ProcedureSettings.get(
+        rules = ProcedureSettings.select().where(
             (ProcedureSettings.procedure == visit.procedure) &
             (ProcedureSettings.minAge.is_null() | (ProcedureSettings.minAge <= visit.get_age())) &
             (ProcedureSettings.maxAge.is_null() | (ProcedureSettings.maxAge >= visit.get_age()))
         )
+        if not rules:
+            rules = ProcedureSettings.select().where(ProcedureSettings.procedure == 'Gastroscopy')
         start_time = round_time(start_time, time_unit.seconds)
-        end_time = round_time(start_time + timedelta(minutes=rule.duration) + intersession_break, time_unit.seconds)
+        end_time = round_time(start_time + timedelta(minutes=rules[0].duration) + intersession_break, time_unit.seconds)
         timetable_entry = {
             'lastname': visit.lastname,
             'firstname': visit.firstname,
+            'sex': visit.sex,
             'dob': visit.dob,
             'age': visit.get_age(),
             'procedure': visit.procedure,
@@ -106,6 +113,7 @@ def generate_timetable(patients_visits: list[PatientVisit]):
             timetable.append({
                 'lastname': '',
                 'firstname': '',
+                'sex': '',
                 'dob': '',
                 'age': '',
                 'procedure': 'Launch break',
