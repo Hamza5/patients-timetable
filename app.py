@@ -23,6 +23,8 @@ def after_request(response):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     table = None
+    title = None
+    doctor = None
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('No uploaded file', 'danger')
@@ -30,7 +32,7 @@ def index():
         if file.filename == '':
             flash('No selected file', 'danger')
         try:
-            visits = get_patient_visits(file.stream)
+            visits, [title, doctor] = get_patient_visits(file.stream)
             if visits:
                 table = generate_timetable(visits)
             else:
@@ -39,7 +41,7 @@ def index():
             flash('The uploaded file is not a valid PDF file', 'danger')
         except Exception as e:
             flash(f'{type(e).__name__}: {e}', 'danger')
-    return render_template('index.html', table=table)
+    return render_template('index.html', table=table, title=title, doctor=doctor)
 
 
 if __name__ == '__main__':

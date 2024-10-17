@@ -13,43 +13,13 @@
 </head>
 <body>
 <div class="page">
-    <header class="navbar navbar-expand-sm navbar-light d-print-none">
-        <div class="container-xl">
-            <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                <a href="/" class="nav-link">
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="48"  height="48"  viewBox="0 0 24 24"  fill="currentColor"  class="icon-tabler icons-tabler-filled icon-tabler-hospital-circle navbar-brand-image pe-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 2c5.523 0 10 4.477 10 10a10 10 0 0 1 -20 0l.004 -.28c.148 -5.393 4.566 -9.72 9.996 -9.72m2 5a1 1 0 0 0 -1 1v2.999h-2v-2.999a1 1 0 0 0 -.883 -.993l-.117 -.007a1 1 0 0 0 -1 1v8a1 1 0 0 0 2 0v-3.001h2v3.001a1 1 0 0 0 .883 .993l.117 .007a1 1 0 0 0 1 -1v-8a1 1 0 0 0 -1 -1" /></svg>
-                    Theatre timing
-                </a>
-            </h1>
-
-            <div class="navbar-nav flex-row order-md-last">
-                <div class="nav-item">
-                    <div class="nav-link d-flex lh-1 text-reset p-0">
-                        <div class="d-none d-xl-block ps-2">
-                            <div>Dr Ammar Nagree</div>
-                            <div class="mt-1 small text-secondary">Waikiki Private Hospital</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+    {% include 'header.html' %}
     <div class="page-wrapper">
         <div class="page-body">
             <div class="container-xl">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-                            <h4 class="alert-title">{{ category.capitalize() }}</h4>
-                            <div class="text-secondary">{{ message }}</div>
-                            <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+                {% include 'alerts.html' %}
                 <div class="row row-deck row-cards">
-                    <div class="col-12">
+                    <div class="col-12 d-print-none">
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">Theatre list upload</h3>
@@ -71,8 +41,9 @@
                     {% if table %}
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Timetable</h3>
+                                <div class="card-header d-block py-2">
+                                    <h3 class="card-title">{{ title }}</h3>
+                                    <h4 class="text-muted m-0">{{ doctor }}</h4>
                                 </div>
                                 <div class="card-body">
                                     {% include 'table.html' %}

@@ -2,6 +2,7 @@ import re
 import pdfplumber
 from dataclasses import dataclass
 from datetime import datetime, timedelta, date
+
 from database import ProcedureSettings, GeneralSettings
 
 PATIENT_INFO_RE = re.compile(
@@ -42,6 +43,11 @@ class PatientVisit:
         return representation[:-2] + ')'
 
 
+def get_title_info(pdf: pdfplumber.PDF):
+    title = pdf.pages[0].extract_text_simple().splitlines()[0]
+    return [x.strip() for x in title.split('-')[::2]]
+
+
 def get_patient_visits(pdf_file):
     with pdfplumber.open(pdf_file) as pdf:
         patient_visits = []
@@ -61,7 +67,7 @@ def get_patient_visits(pdf_file):
                         age=int(re_result.group('age')) if re_result.group('age').isnumeric() else None,
                         procedure=normalize_procedure(procedure),
                     ))
-    return patient_visits
+        return patient_visits, get_title_info(pdf)
 
 
 def round_time(dt=None, round_to=60):
