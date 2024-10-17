@@ -29,10 +29,10 @@
                                     <label class="form-label required">Original theatre list PDF</label>
                                     <div class="input-group">
                                         <input type="file" name="file" class="form-control" required/>
-                                            <button type="submit" class="btn">
-                                                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-upload"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 9l5 -5l5 5" /><path d="M12 4l0 12" /></svg>
-                                                Upload
-                                            </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-upload"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 9l5 -5l5 5" /><path d="M12 4l0 12" /></svg>
+                                            Upload
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -41,9 +41,17 @@
                     {% if table %}
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header d-block py-2">
-                                    <h3 class="card-title">{{ title }}</h3>
-                                    <h4 class="text-muted m-0">{{ doctor }}</h4>
+                                <div class="card-header py-2 d-flex justify-content-between">
+                                    <div>
+                                        <h3 class="card-title">{{ title }}</h3>
+                                        <h4 class="text-muted m-0">{{ doctor }}</h4>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-secondary d-print-none" onclick="window.print()">
+                                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-printer"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" /><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" /><path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" /></svg>
+                                            Print table
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     {% include 'table.html' %}

@@ -101,8 +101,7 @@ def generate_timetable(patients_visits: list[PatientVisit]):
         )
         if not rules:
             rules = ProcedureSettings.select().where(ProcedureSettings.procedure == 'Gastroscopy')
-        start_time = round_time(start_time, time_unit.seconds)
-        end_time = round_time(start_time + timedelta(minutes=rules[0].duration) + intersession_break, time_unit.seconds)
+        end_time = start_time + timedelta(minutes=rules[0].duration) + intersession_break
         timetable_entry = {
             'lastname': visit.lastname,
             'firstname': visit.firstname,
@@ -110,7 +109,8 @@ def generate_timetable(patients_visits: list[PatientVisit]):
             'dob': visit.dob,
             'age': visit.get_age(),
             'procedure': visit.procedure,
-            'start_time': start_time.strftime('%H:%M'),
+            'start_time': round_time(start_time, time_unit.seconds).strftime('%H:%M'),
+            'duration': f'{rules[0].duration} min',
             'end_time': end_time.strftime('%H:%M'),
         }
         timetable.append(timetable_entry)
@@ -124,6 +124,7 @@ def generate_timetable(patients_visits: list[PatientVisit]):
                 'age': '',
                 'procedure': 'Launch break',
                 'start_time': start_time.strftime('%H:%M'),
+                'duration': f'{launch_duration.seconds // 60} min',
                 'end_time': (start_time + launch_duration).strftime('%H:%M'),
             })
             start_time += launch_duration

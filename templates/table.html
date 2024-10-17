@@ -6,7 +6,8 @@
             <th>Sex</th>
             <th>Age</th>
             <th>Procedure</th>
-            <th>Start time</th>
+            <th>Start time (rounded)</th>
+            <th>Duration</th>
             <th>End time</th>
         </tr>
         </thead>
@@ -14,13 +15,14 @@
         {% for entry in table %}
             <tr>
             {% if entry.procedure.startswith('Launch') %}
-            	<td colspan="6" class="text-center table-secondary">{{ entry.procedure }}</td>
+            	<td colspan="7" class="text-center table-secondary">{{ entry.procedure }}</td>
             {% else %}
                 <td>{{ entry.lastname }}, {{ entry.firstname }}</td>
                 <td>{{ entry.sex }}</td>
                 <td>{{ entry.age }} yrs</td>
                 <td>{{ entry.procedure }}</td>
                 <td class="text-red fw-bold">{{ entry.start_time }}</td>
+                <td>{{ entry.duration }}</td>
                 <td>{{ entry.end_time }}</td>
             {% endif %}
             </tr>
