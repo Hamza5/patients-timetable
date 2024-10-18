@@ -86,7 +86,7 @@ def round_time(dt=None, round_to=60):
     return dt + timedelta(0, rounding-seconds, -dt.microsecond)
 
 
-def generate_timetable(patients_visits: list[PatientVisit]):
+def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
     start_time = datetime.strptime(GeneralSettings.get(GeneralSettings.key == 'First patient time').value, '%H:%M')
     time_unit = timedelta(minutes=int(GeneralSettings.get(GeneralSettings.key == 'Time unit').value))
     launch_duration = timedelta(minutes=int(GeneralSettings.get(GeneralSettings.key == 'Launch duration').value))
@@ -97,7 +97,8 @@ def generate_timetable(patients_visits: list[PatientVisit]):
         rules = ProcedureSettings.select().where(
             (ProcedureSettings.procedure == visit.procedure) &
             (ProcedureSettings.minAge.is_null() | (ProcedureSettings.minAge <= visit.get_age())) &
-            (ProcedureSettings.maxAge.is_null() | (ProcedureSettings.maxAge >= visit.get_age()))
+            (ProcedureSettings.maxAge.is_null() | (ProcedureSettings.maxAge >= visit.get_age())) &
+            (ProcedureSettings.doctor ** doctor_name.split()[-1])
         )
         if not rules:
             rules = ProcedureSettings.select().where(ProcedureSettings.procedure == 'Gastroscopy')

@@ -2,7 +2,7 @@ from uuid import uuid4
 from flask import Flask, request, render_template, flash
 from pdfminer.pdfparser import PDFSyntaxError
 
-from database import db
+from database import db, get_doctor_names
 from timetable import get_patient_visits, generate_timetable
 
 app = Flask(__name__)
@@ -34,14 +34,16 @@ def index():
         try:
             visits, [title, doctor] = get_patient_visits(file.stream)
             if visits:
-                table = generate_timetable(visits)
+                if request.form.get('doctor'):
+                    doctor = request.form.get('doctor')
+                table = generate_timetable(visits, doctor)
             else:
                 flash('The uploaded file does not contain data in the correct format', 'danger')
         except PDFSyntaxError:
             flash('The uploaded file is not a valid PDF file', 'danger')
         except Exception as e:
             flash(f'{type(e).__name__}: {e}', 'danger')
-    return render_template('index.html', table=table, title=title, doctor=doctor)
+    return render_template('index.html', table=table, title=title, doctor=doctor, doctor_names=get_doctor_names())
 
 
 if __name__ == '__main__':
