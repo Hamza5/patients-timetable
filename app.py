@@ -32,8 +32,9 @@ def index():
         if file.filename == '':
             flash('No selected file', 'danger')
         try:
-            visits, [title, doctor] = get_patient_visits(file.stream)
+            visits, info = get_patient_visits(file.stream)
             if visits:
+                [title, doctor] = info
                 if request.form.get('doctor'):
                     doctor = request.form.get('doctor')
                 table = generate_timetable(visits, doctor)
@@ -43,6 +44,8 @@ def index():
             flash('The uploaded file is not a valid PDF file', 'danger')
         except Exception as e:
             flash(f'{type(e).__name__}: {e}', 'danger')
+            import traceback
+            traceback.print_exception(e)
     return render_template('index.html', table=table, title=title, doctor=doctor, doctor_names=get_doctor_names())
 
 

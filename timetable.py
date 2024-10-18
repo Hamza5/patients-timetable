@@ -87,7 +87,8 @@ def round_time(dt=None, round_to=60):
 
 
 def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
-    start_time = datetime.strptime(GeneralSettings.get(GeneralSettings.key == 'First patient time').value, '%H:%M')
+    admission_time = datetime.strptime(GeneralSettings.get(GeneralSettings.key == 'First patient time').value, '%H:%M')
+    procedure_time = datetime.strptime(GeneralSettings.get(GeneralSettings.key == 'Procedure start time').value, '%H:%M')
     time_unit = timedelta(minutes=int(GeneralSettings.get(GeneralSettings.key == 'Time unit').value))
     launch_duration = timedelta(minutes=int(GeneralSettings.get(GeneralSettings.key == 'Launch duration').value))
     launch_min_time = datetime.strptime(GeneralSettings.get(GeneralSettings.key == 'Launch min time').value, '%H:%M')
@@ -102,7 +103,8 @@ def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
         )
         if not rules:
             rules = ProcedureSettings.select().where(ProcedureSettings.procedure == 'Gastroscopy')
-        end_time = start_time + timedelta(minutes=rules[0].duration) + intersession_break
+        duration = timedelta(minutes=rules[0].duration)
+        end_time = procedure_time + duration + intersession_break
         timetable_entry = {
             'lastname': visit.lastname,
             'firstname': visit.firstname,
@@ -110,13 +112,15 @@ def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
             'dob': visit.dob,
             'age': visit.get_age(),
             'procedure': visit.procedure,
-            'start_time': round_time(start_time, time_unit.seconds).strftime('%H:%M'),
-            'duration': f'{rules[0].duration} min',
+            'admission_time': round_time(admission_time, time_unit.seconds).strftime('%H:%M'),
+            'procedure_time': procedure_time.strftime('%H:%M'),
+            'duration': f'{duration.seconds // 60} min',
             'end_time': end_time.strftime('%H:%M'),
         }
         timetable.append(timetable_entry)
-        start_time += end_time - start_time
-        if start_time >= launch_min_time and not list(filter(lambda x: x['procedure'] == 'Launch break', timetable)):
+        procedure_time += duration
+        admission_time += duration
+        if procedure_time >= launch_min_time and not list(filter(lambda x: x['procedure'] == 'Launch break', timetable)):
             timetable.append({
                 'lastname': '',
                 'firstname': '',
@@ -124,9 +128,11 @@ def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
                 'dob': '',
                 'age': '',
                 'procedure': 'Launch break',
-                'start_time': start_time.strftime('%H:%M'),
+                'admission_time': admission_time.strftime('%H:%M'),
+                'procedure_time': procedure_time.strftime('%H:%M'),
                 'duration': f'{launch_duration.seconds // 60} min',
-                'end_time': (start_time + launch_duration).strftime('%H:%M'),
+                'end_time': (procedure_time + launch_duration).strftime('%H:%M'),
             })
-            start_time += launch_duration
+            admission_time += launch_duration
+            procedure_time += launch_duration
     return timetable

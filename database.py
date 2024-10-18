@@ -67,6 +67,7 @@ def init_db():
         ProcedureSettings.create(procedure='Gastroscopy + Colonoscopy', minAge=76, duration=55, doctor='Mcelholm')
 
         GeneralSettings.create(key='First patient time', value='07:00')
+        GeneralSettings.create(key='Procedure start time', value='08:00')
         GeneralSettings.create(key='Launch duration', value='40')
         GeneralSettings.create(key='Launch min time', value='12:30')
         GeneralSettings.create(key='Time unit', value='15')
