@@ -120,14 +120,14 @@ def generate_timetable(patients_visits: list[PatientVisit], doctor_name: str):
         timetable.append(timetable_entry)
         procedure_time += duration
         admission_time += duration
-        if procedure_time >= launch_min_time and not list(filter(lambda x: x['procedure'] == 'Launch break', timetable)):
+        if procedure_time >= launch_min_time and not list(filter(lambda x: x['procedure'] == 'Lunch break', timetable)):
             timetable.append({
                 'lastname': '',
                 'firstname': '',
                 'sex': '',
                 'dob': '',
                 'age': '',
-                'procedure': 'Launch break',
+                'procedure': 'Lunch break',
                 'admission_time': admission_time.strftime('%H:%M'),
                 'procedure_time': procedure_time.strftime('%H:%M'),
                 'duration': f'{launch_duration.seconds // 60} min',

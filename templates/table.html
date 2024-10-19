@@ -15,7 +15,7 @@
         <tbody>
         {% for entry in table %}
             <tr>
-            {% if entry.procedure.startswith('Launch') %}
+            {% if entry.procedure.startswith('Lunch') %}
             	<td colspan="8" class="text-center table-secondary">{{ entry.procedure }}</td>
             {% else %}
                 <td>{{ entry.lastname }}, {{ entry.firstname }}</td>
