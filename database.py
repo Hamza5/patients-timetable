@@ -27,6 +27,18 @@ def get_doctor_names():
     return [r.doctor for r in results]
 
 
+def get_procedure_settings(doctor_name):
+    return [
+        {
+            'procedure': p.procedure,
+            'minAge': p.minAge,
+            'maxAge': p.maxAge,
+            'duration': p.duration,
+        } for p in
+        ProcedureSettings.select().where(ProcedureSettings.doctor == doctor_name)
+    ]
+
+
 def init_db():
     db.connect()
     models = [ProcedureSettings, GeneralSettings]

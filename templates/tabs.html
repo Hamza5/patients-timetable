@@ -1,0 +1,83 @@
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+            <li class="nav-item">
+                <a href="#tabs-home-ex1" class="nav-link active" data-bs-toggle="tab">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-report-medical me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M10 14l4 0" /><path d="M12 12l0 4" /></svg>
+                    Theatre
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tabs-profile-ex1" class="nav-link" data-bs-toggle="tab">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-stethoscope me-1"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h-1a2 2 0 0 0 -2 2v3.5h0a5.5 5.5 0 0 0 11 0v-3.5a2 2 0 0 0 -2 -2h-1" /><path d="M8 15a6 6 0 1 0 12 0v-3" /><path d="M11 3v2" /><path d="M6 3v2" /><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /></svg>
+                    Doctors
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane active show" id="tabs-home-ex1">
+                <form method="post" enctype="multipart/form-data">
+                    <label class="form-label required" for="file">Original theatre list PDF</label>
+                    <div class="input-group">
+                        <input type="file" name="file" class="form-control w-50" id="file" required/>
+                        <label class="input-group-text" for="doctor">Doctor</label>
+                        <select class="form-select" name="doctor" id="doctor">
+                            <option value="">Autodetect</option>
+                            {% for doctor_name in doctor_names %}
+                                <option value="{{ doctor_name }}">{{ doctor_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary">
+                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-upload"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 9l5 -5l5 5" /><path d="M12 4l0 12" /></svg>
+                            Upload
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane" id="tabs-profile-ex1">
+            <div class="vstack gap-2">
+                {% for doctor_name, settings in procedure_settings.items() %}
+                	<div class="card card-sm">
+                        <div class="card-body">
+                            <h3 class="card-title">Dr. {{ doctor_name }}</h3>
+                            {% for setting in settings %}
+                                <div class="row g-1 mb-2">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="{{ doctor_name }}_procedure_{{ loop.index }}">Procedure</label>
+                                        <input type="text" class="form-control" id="{{ doctor_name }}_procedure_{{ loop.index }}" value="{{ setting.procedure }}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="{{ doctor_name }}_minAge_{{ loop.index }}">Minimum age</label>
+                                        <input type="number" class="form-control" id="{{ doctor_name }}_minAge_{{ loop.index }}" value="{{ setting.minAge or '' }}" readonly/>
+                                        <span class="input-group-text">years</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="{{ doctor_name }}_maxAge_{{ loop.index }}">Maximum age</label>
+                                        <input type="number" class="form-control" id="{{ doctor_name }}_maxAge_{{ loop.index }}" value="{{ setting.maxAge or '' }}" readonly/>
+                                        <span class="input-group-text">years</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label class="input-group-text" for="{{ doctor_name }}_duration_{{ loop.index }}">Duration</label>
+                                        <input type="number" class="form-control" id="{{ doctor_name }}_duration_{{ loop.index }}" value="{{ setting.duration }}" readonly/>
+                                        <span class="input-group-text">minutes</span>
+                                    </div>
+                                </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
