@@ -3,10 +3,12 @@ import pdfplumber
 from dataclasses import dataclass
 from datetime import datetime, timedelta, date
 
+from flask import flash
+
 from database import ProcedureSettings, GeneralSettings
 
 PATIENT_INFO_RE = re.compile(
-    r'(?P<lastname>.+?),\s*(?P<firstname>.+?)\s+M\w+\s+\((?P<sex>\w)\)\nDOB:\s*(?P<dob>\d+/\d+/\d+)\s*\((?P<age>\d+)', re.MULTILINE
+    r'(?P<lastname>.+?),\s*(?P<firstname>.+?)\s+M\w+\s+\((?P<sex>\w)\)(?:\n|.)+?DOB:\s*(?P<dob>\d+/\d+/\d+)\s*\((?P<age>\d+)', re.MULTILINE
 )
 
 
@@ -18,6 +20,8 @@ def normalize_procedure(procedure):
         return 'Gastroscopy'
     elif procedure.startswith('Colonoscopy'):
         return 'Colonoscopy'
+    else:
+        flash(f'Unknown procedure "{procedure}". Treating it as Gastroscopy', 'warning')
     return procedure
 
 
@@ -54,6 +58,7 @@ def get_patient_visits(pdf_file):
         for page in pdf.pages:
             table = page.extract_table()
             if not table:
+                flash(f'No table found in page {page.page_number}', 'warning')
                 continue
             for row in table:
                 procedure = (row[3] or '\n').splitlines()[0]
@@ -67,6 +72,8 @@ def get_patient_visits(pdf_file):
                         age=int(re_result.group('age')) if re_result.group('age').isnumeric() else None,
                         procedure=normalize_procedure(procedure),
                     ))
+                elif row[0].title() != 'Patient Contact Procedure':
+                    flash(f'Could not extract patient info from row: {row}', 'warning')
         return patient_visits, get_title_info(pdf)
 
 

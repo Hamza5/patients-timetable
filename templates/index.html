@@ -26,9 +26,12 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header py-2 d-flex justify-content-between">
-                                    <div>
+                                    <div class="flex flex-row gap-2">
                                         <h3 class="card-title">{{ title }}</h3>
-                                        <h4 class="text-muted m-0">{{ doctor }}</h4>
+                                        <h4 class="text-muted m-0">
+                                            {{ doctor }}
+                                            <span class="badge bg-blue float-end">{{ table|rejectattr('procedure', 'eq', 'Lunch break')|list|length }} patients</span>
+                                        </h4>
                                     </div>
                                     <div>
                                         <button class="btn btn-secondary d-print-none" onclick="window.print()">
